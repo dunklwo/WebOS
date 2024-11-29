@@ -1,0 +1,86 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Background</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Change Background</h1>
+
+        
+        <div class="color-picker">
+            <label for="color">Pick a Color: </label>
+            <input type="color" id="color" value="#ffffff">
+        </div>
+
+        
+        <div class="hex-input">
+            <label for="hex">Or Enter a Hex Code: </label>
+            <input type="text" id="hex" placeholder="#ffffff">
+        </div>
+
+
+        <div class="wallpaper-upload">
+            <label for="wallpaper">Upload Wallpaper: </label>
+            <input type="file" id="wallpaper" accept="image/*" onchange="changeWallpaper(event)">
+        </div>
+
+        
+        <div class="wallpaper-options">
+            <h3>Select a Predefined Wallpaper:</h3>
+            <img src="https://via.placeholder.com/300x200.png?text=Wallpaper+1" alt="Wallpaper 1" onclick="applyWallpaper(this.src)">
+            <img src="https://via.placeholder.com/300x200.png?text=Wallpaper+2" alt="Wallpaper 2" onclick="applyWallpaper(this.src)">
+            <img src="https://via.placeholder.com/300x200.png?text=Wallpaper+3" alt="Wallpaper 3" onclick="applyWallpaper(this.src)">
+        </div>
+
+        <button onclick="applyBackground()">Apply Background</button>
+    </div>
+
+    <script>
+        function applyBackground() {
+            const colorPicker = document.getElementById("color").value;
+            const hexInput = document.getElementById("hex").value.trim();
+            
+            let selectedColor = colorPicker;
+            
+          
+            if (hexInput) {
+                const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+                if (hexPattern.test(hexInput)) {
+                    selectedColor = hexInput;
+                } else {
+                    alert("Invalid hex color. Please enter a valid hex code (e.g., #123456).");
+                    return;
+                }
+            }
+            
+                      localStorage.setItem('backgroundColor', selectedColor);
+            localStorage.setItem('backgroundImage', 'none');
+        }
+
+        function changeWallpaper(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    
+                    localStorage.setItem('backgroundImage', e.target.result);
+                    localStorage.setItem('backgroundColor', 'transparent'); 
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function applyWallpaper(src) {
+            
+            localStorage.setItem('backgroundImage', src);
+            localStorage.setItem('backgroundColor', 'transparent'); 
+        }
+    </script>
+</body>
+</html>

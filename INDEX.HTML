@@ -1,0 +1,227 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Text Editor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s;
+        }
+        textarea {
+            height: 400px;
+        }
+        textarea:focus, input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px; 
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .documents {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .documents table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .documents th, .documents td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .documents th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .documents tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .documents tr:hover {
+            background-color: #f1f1f1;
+        }
+        .documents caption {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Editor</h1>
+    <input type="text" id="title" placeholder="Enter document title..." />
+    <textarea id="content" placeholder="Type your content here..."></textarea>
+
+    <div class="button-container">
+        <button onclick="saveDocument()">Save</button>
+        <button onclick="loadDocument()">Load</button>
+        <button onclick="listDocuments()">List All Documents</button>
+        <button onclick="deleteDocument()">Delete</button>
+        <button onclick="editDocument()">Edit</button>
+    </div>
+
+    <div class="documents" id="documents"></div>
+
+    <script>
+         function saveDocument() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            if (!title || !content) {
+                alert("Title and content cannot be empty.");
+                return;
+            }
+
+            fetch('save.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
+            })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(err => console.error("Error:", err));
+        }
+
+        function loadDocument() {
+            const id = prompt("Enter the document ID to load:");
+            if (!id) return;
+
+            fetch(`load.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('title').value = data.title;
+                    document.getElementById('content').value = data.content;
+                }
+            })
+            .catch(err => console.error("Error:", err));
+        }
+
+        function listDocuments() {
+            fetch('list.php')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('documents');
+                if (data.length === 0) {
+                    container.innerHTML = "<p>No documents found.</p>";
+                    return;
+                }
+
+                let table = "<table><thead><tr><th>ID</th><th>Title</th><th>Last Modified</th></tr></thead><tbody>";
+                data.forEach(doc => {
+                    table += `<tr><td>${doc.id}</td><td>${doc.title}</td><td>${doc.last_modified}</td></tr>`;
+                });
+                table += "</tbody></table>";
+
+                container.innerHTML = table;
+            })
+            .catch(err => console.error("Error:", err));
+        }
+
+        function deleteDocument() {
+            const id = prompt("Enter the document ID to delete:");
+            if (!id) return;
+
+            fetch(`delete.php?id=${id}`, { method: 'DELETE' })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                listDocuments();             })
+            .catch(err => console.error("Error:", err));
+        }
+
+        function editDocument() {
+    const id = prompt("Enter the document ID to edit:");
+    if (!id) return;
+
+    fetch(`load.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                document.getElementById('title').value = data.title;
+                document.getElementById('content').value = data.content;
+
+
+                const saveButton = document.createElement('button');
+                saveButton.textContent = "Save Changes";
+                saveButton.style.marginTop = "10px";
+
+                
+                saveButton.onclick = function () {
+                    const title = document.getElementById('title').value;
+                    const content = document.getElementById('content').value;
+
+                    fetch('update.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `id=${encodeURIComponent(id)}&title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        alert(data);
+                        saveButton.remove();                     })
+                    .catch(err => console.error("Error:", err));
+                };
+
+                const container = document.getElementById('documents');
+                container.innerHTML = '';                 
+container.appendChild(saveButton);
+            }
+        })
+        .catch(err => console.error("Error:", err));
+}
+    </script>
+</body>
+</html>

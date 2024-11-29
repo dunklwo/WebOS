@@ -1,0 +1,60 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="fileExplorer" class="file-explorer">
+        
+        <div class="file-explorer-header">
+            <div class="tabs">
+                <div class="tab home active">Home</div>
+                <div class="tab documents">Documents</div>
+                <div class="tab downloads">Downloads</div>
+                <div class="tab pictures">Pictures</div>
+                <div class="tab music">Music</div>
+            </div>
+            <button class="close-btn" onclick="closeFileExplorer()">X</button>
+        </div>
+        
+        <div class="sidebar">
+            
+            <div class="icon home active">🏠 Home</div>
+            <div class="icon documents">📁 Documents</div>
+            <div class="icon downloads">⬇️ Downloads</div>
+            <div class="icon pictures">🖼️ Pictures</div>
+            <div class="icon music">🎵 Music</div>
+        </div>
+
+        <div class="content-area">
+            <div id="home" class="folder-view active">
+                <div class="folder">Documents</div>
+                <div class="folder">Pictures</div>
+                <div class="folder">Music</div>
+                <div class="folder">Downloads</div>
+            </div>
+            <div id="documents" class="folder-view">
+                <div class="folder"><a href="check.txt" download>check.txt</a></div>
+                <div class="folder"><a href="newcheck.txt" download></a></div>
+            </div>
+            <div id="downloads" class="folder-view">
+                <div class="folder">Download 1</div>
+                <div class="folder">Download 2</div>
+            </div>
+            <div id="pictures" class="folder-view">
+                <div class="folder">Picture 1</div>
+                <div class="folder">Picture 2</div>
+            </div>
+            <div id="music" class="folder-view">
+                <div class="folder">Song 1</div>
+                <div class="folder">Song 2</div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

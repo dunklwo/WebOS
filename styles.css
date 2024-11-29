@@ -1,0 +1,72 @@
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;     
+background-color: #000; 
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    animation: fadeOutScreen 5s ease-out 3s forwards; 
+}
+
+
+.video-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.fullscreen-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    animation: scaleVideo 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+
+@keyframes scaleVideo {
+    0% {
+        transform: scale(1.2);         opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes fadeOutScreen {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+
+.main-content {
+    display: none; 
+    opacity: 0;
+}
+
+
+
